@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Treino extends StatelessWidget {
-  const Treino({super.key});
+class CardExercise extends StatelessWidget {
+  const CardExercise({super.key});
 
   @override
   Widget build(BuildContext context) {
