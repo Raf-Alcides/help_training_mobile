@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:help_training_mobile/component/card_exercise.dart';
 import 'package:help_training_mobile/pages/add_exercise_page.dart';
 
-
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  HomePage({super.key});
-  List<CardExercise> myExercises = [];
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  
+  List<CardExercise> myExercises = [];
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Treinos'),
       ),
-      body: widget.myExercises.isEmpty
+      body: myExercises.isEmpty
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -44,15 +42,25 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             )
-          : ListView.builder(
-            itemCount: widget.myExercises.length,
-            itemBuilder: (_, index) {
-              return const CardExercise();
-            }),
+          : ListView.separated(
+              separatorBuilder: (_, __) => const SizedBox(height: 20),
+
+              itemCount: myExercises.length,
+              itemBuilder: (_, index) {
+                
+                return myExercises[index];
+              } ,
+            ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) =>  CreateExercisePage()));
-            
+          onPressed: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const CreateExercisePage(),
+              ),
+            ).then((value) => setState(() {
+                  myExercises.add(value);
+                }));
           },
           child: const Icon(
             Icons.add,

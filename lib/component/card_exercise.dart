@@ -1,166 +1,70 @@
 import 'package:flutter/material.dart';
 
-class CardExercise extends StatelessWidget {
-  const CardExercise({super.key});
+// ignore: must_be_immutable
+class CardExercise extends StatefulWidget {
+  final String title;
+  final double value;
+  final Icon icon;
+  Function()? onPressed;
+
+  CardExercise({
+    Key? key,
+    required this.title,
+    required this.value,
+    required this.icon,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
+  State<CardExercise> createState() => _CardExerciseState();
+}
+
+class _CardExerciseState extends State<CardExercise> {
+  @override
   Widget build(BuildContext context) {
+    const textStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+    );
     return Container(
-      margin: const EdgeInsets.only(
-        top: 24,
-        left: 20,
-        right: 20,
-      ),
-      height: 180,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+      height: 110,
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-          bottomLeft: Radius.circular(10),
-          bottomRight: Radius.circular(10),
-        ),
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xff7C98FB),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                        ),
-                      ),
-                      child: Image.asset('assets/images/strength.png'),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Text(
-                          'Fazer 20 Flexões',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xff7C98FB),
-                          ),
-                        ),
-                        const _DifficultyWidget(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: LinearProgressIndicator(
-                            color: const Color(0xff7C98FB),
-                            backgroundColor:
-                                const Color(0xff7C98FB).withAlpha(50),
-                            value: 1,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xff7C98FB),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    backgroundColor: const MaterialStatePropertyAll(Colors.white),
-                    elevation: const MaterialStatePropertyAll(0),
-                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.keyboard_double_arrow_up,
-                        size: 20,
-                        color: Colors.green[900],
-                      ),
-                      const Text('Subir Nivel', style: TextStyle(
-                        fontSize: 20,
-                        color: Color(0xff7C98FB)
-                      ),),
-                      Icon(
-                        Icons.keyboard_double_arrow_up,
-                        size: 20,
-                        color: Colors.green[900],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 5.0,
+            offset: Offset(0.0, 0.75),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _DifficultyWidget extends StatelessWidget {
-  const _DifficultyWidget();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.star,
-          size: 20,
-          color: Colors.yellow,
-        ),
-        const Icon(
-          Icons.star,
-          size: 20,
-          color: Colors.yellow,
-        ),
-        Icon(
-          Icons.star,
-          size: 20,
-          color: const Color(0xff7C98FB).withAlpha(100),
-        ),
-        Icon(
-          Icons.star,
-          size: 20,
-          color: const Color(0xff7C98FB).withAlpha(100),
-        ),
-        Icon(
-          Icons.star,
-          size: 20,
-          color: const Color(0xff7C98FB).withAlpha(100),
-        ),
-      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            widget.title,
+            style: textStyle,
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: LinearProgressIndicator(
+                value: widget.value,
+              )),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: widget.icon,
+              ),
+            ],
+          ),
+          Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                  onPressed: widget.onPressed, child: const Text('Aumentar Nivel')))
+        ],
+      ),
     );
   }
 }

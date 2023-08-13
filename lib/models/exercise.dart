@@ -1,11 +1,13 @@
 class Exercise {
   final String nameExercise;
-  final int difficulty;
-  final int level;
+  final int countBefore;
+  final int countAfter;
+  final int month;
 
   Exercise({
+    required this.countBefore,
+    required this.countAfter,
+    required this.month,
     required this.nameExercise,
-    required this.difficulty,
-    required this.level,
   });
 }

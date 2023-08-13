@@ -10,7 +10,7 @@ class HelpTraining extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home:  HomePage(),
+      home:  const HomePage(),
     );
   }
 }

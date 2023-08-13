@@ -1,118 +1,144 @@
 import 'package:flutter/material.dart';
 
+import 'package:help_training_mobile/component/card_exercise.dart';
+
 class CreateExercisePage extends StatefulWidget {
-  String _value = '';
-
-  CreateExercisePage({super.key});
-
+  const CreateExercisePage({super.key});
   @override
   State<CreateExercisePage> createState() => _CreateExercisePageState();
 }
 
 class _CreateExercisePageState extends State<CreateExercisePage> {
+  TextEditingController nameExerciseController = TextEditingController();
+  TextEditingController countController = TextEditingController();
+  TextEditingController metaCountController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    double size = MediaQuery.of(context).size.height;
+    const textStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+    );
+    int initial = int.tryParse(countController.text) ?? 0;
+    int meta = int.tryParse(metaCountController.text) ?? 0;
+    String nameExercise = nameExerciseController.text;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Criar Exercicio'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Selecione um Exercicio'),
-          _DropdownWidget(
-              selectedValue: widget._value,
-              onChanged: (val) {
-                setState(() {
-                  widget._value = val as String;
-                });
-              }),
-          const SizedBox(
-            height: 50,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: size,
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 50, left: 20, right: 20, bottom: 100),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Escreva qual o exercicio que tu quer adicinar?',
+                  style: textStyle,
+                ),
+                _input(
+                  controller: nameExerciseController,
+                  hintText: 'Ex: Pulo de Corda',
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Text(
+                  'Total de vezes que vs consegue realizar esse exercicio sem parar?',
+                  style: textStyle,
+                ),
+                _input(
+                  controller: countController,
+                  hintText: 'Ex: 7',
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Text(
+                  'Seja sincero, Informa a quantidade ideal que tu pretende chegar',
+                  style: textStyle,
+                ),
+                _input(
+                  controller: metaCountController,
+                  hintText: 'Ex: 30',
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            CardExercise exercise = CardExercise(
+                              title: '$nameExercise $initial vezes',
+                              value: initial / meta,
+                              icon: Icon(
+                                Icons.check,
+                                color: initial != meta
+                                    ? Colors.green[700]
+                                    : Colors.grey[400],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  initial++;
+                                });
+                              },
+                            );
+                            
+                            Navigator.of(context).pop(exercise);
+                          },
+                          child: const Text('Adicionar Exercicio'))),
+                )
+              ],
+            ),
           ),
-          Text(
-              'Qual o numero de Vezes que consegue fazer o Exercicio em Sequencia?'),
-          const SizedBox(
-            height: 50,
-          ),
-          Text('Seja Sincero Qual a Quantide ideal de Sequencia e a ideal?'),
-          const SizedBox(
-            height: 50,
-          ),
-          Text('Em Quantos meses Quer alcançar esse Objetvo?')
-        ],
+        ),
       ),
     );
   }
 }
 
-class _DropdownBottonWidget extends StatefulWidget {
-  final void Function() onChanged;
-  final int selectedValue;
+// ignore: camel_case_types
+class _input extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
 
-  const _DropdownBottonWidget({
+  const _input({
     Key? key,
-    required this.selectedValue,
-    required this.onChanged,
+    required this.controller,
+    required this.hintText,
   }) : super(key: key);
 
   @override
-  State<_DropdownWidget> createState() => _DropdownWidgetState();
-}
-
-class _DropdownWidgetState extends State<_DropdownWidget> {
-  @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField(
-        items: listExercises.map((e) {
-          return DropdownMenuItem(
-            value: e,
-            child: Text(e),
-          );
-        }).toList(),
-        value: widget.selectedValue,
-        onChanged: widget.onChanged);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: SizedBox(
+        height: 40,
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            isDense: true,
+            hintText: hintText,
+            hintStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[400]),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none),
+          ),
+        ),
+      ),
+    );
   }
 }
-
-class _DropdownWidget extends StatefulWidget {
-  final void Function(String?) onChanged;
-  final String selectedValue;
-
-  const _DropdownWidget({
-    Key? key,
-    required this.selectedValue,
-    required this.onChanged,
-  }) : super(key: key);
-
-  @override
-  State<_DropdownWidget> createState() => _DropdownWidgetState();
-}
-
-class _DropdownBottonWidgetState extends State<_DropdownWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton(
-        items: number.map((e) {
-          return DropdownMenuItem(
-            
-            child: Text(e),
-          );
-        }).toList(),
-        value: widget.selectedValue,
-        onChanged: widget.onChanged);
-  }
-}
-
-List number = List.generate(100, (index) => index);
-
-List<String> listExercises = const [
-  'Barra Fixa',
-  'Agachamento',
-  'Elevação Pelvica',
-  'Abdominal',
-  'Mergulho no banco',
-  'Barra parelala',
-  'Burpee',
-];
