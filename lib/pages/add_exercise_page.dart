@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:help_training_mobile/component/card_exercise.dart';
+import 'package:help_training_mobile/models/exercise.dart';
 
 class CreateExercisePage extends StatefulWidget {
   const CreateExercisePage({super.key});
@@ -20,10 +19,6 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
       fontSize: 16,
       fontWeight: FontWeight.w500,
     );
-    int initial = int.tryParse(countController.text) ?? 0;
-    int meta = int.tryParse(metaCountController.text) ?? 0;
-    String nameExercise = nameExerciseController.text;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Criar Exercicio'),
@@ -68,33 +63,31 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
                   controller: metaCountController,
                   hintText: 'Ex: 30',
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
                 Expanded(
                   child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            CardExercise exercise = CardExercise(
-                              title: '$nameExercise $initial vezes',
-                              value: initial / meta,
-                              icon: Icon(
-                                Icons.check,
-                                color: initial != meta
-                                    ? Colors.green[700]
-                                    : Colors.grey[400],
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  initial++;
-                                });
-                              },
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        String nameExercise = nameExerciseController.text;
+                        int? countBefore = int.tryParse(countController.text);
+                        int? countAfter =
+                            int.tryParse(metaCountController.text);
+
+                        if (countBefore != null && countAfter != null) {
+                          if (countAfter > countBefore) {
+                            Exercise exercise = Exercise(
+                              nameExercise: nameExercise,
+                              countBefore: countBefore,
+                              countAfter: countAfter,
                             );
-                            
-                            Navigator.of(context).pop(exercise);
-                          },
-                          child: const Text('Adicionar Exercicio'))),
+
+                            Navigator.pop<Exercise>(context, exercise);
+                          }
+                        }
+                      },
+                      child: const Text('Adicionar Exercicio'),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -105,7 +98,6 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
   }
 }
 
-// ignore: camel_case_types
 class _input extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;

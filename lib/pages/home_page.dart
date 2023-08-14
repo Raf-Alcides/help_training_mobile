@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:help_training_mobile/component/card_exercise.dart';
+import 'package:help_training_mobile/models/exercise.dart';
 import 'package:help_training_mobile/pages/add_exercise_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<CardExercise> myExercises = [];
+  final List<Exercise> _myExercises = [];
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Treinos'),
       ),
-      body: myExercises.isEmpty
+      body: _myExercises.isEmpty
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -44,23 +44,29 @@ class _HomePageState extends State<HomePage> {
             )
           : ListView.separated(
               separatorBuilder: (_, __) => const SizedBox(height: 20),
-
-              itemCount: myExercises.length,
+              itemCount: _myExercises.length,
               itemBuilder: (_, index) {
-                
-                return myExercises[index];
-              } ,
-            ),
+                return CardExercise(exercise: _myExercises[index]);
+              }),
       floatingActionButton: FloatingActionButton(
-          onPressed: () async {
+          onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => const CreateExercisePage(),
               ),
-            ).then((value) => setState(() {
-                  myExercises.add(value);
-                }));
+            ).then(
+              (value) {
+                Future.delayed(const Duration(seconds: 5),() {
+                  if(value != null) {
+                    setState(() {
+                      _myExercises.add(value);
+                    });
+                    
+                  }
+                } );
+              },
+            );
           },
           child: const Icon(
             Icons.add,
